@@ -3,6 +3,7 @@ import pygame
 import esper
 from src.ecs.components.c_animation import CAnimation
 from src.ecs.components.c_enemy_spawner import CEnemySpawner
+from src.ecs.components.c_hunter_state import CHunterState
 from src.ecs.components.c_input_command import CInputCommand
 from src.ecs.components.c_player_state import CPlayerState
 
@@ -11,6 +12,7 @@ from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
 from src.ecs.components.tags.c_tag_bullet import CTagBullet
 from src.ecs.components.tags.c_tag_enemy import CTagEnemy
+from src.ecs.components.tags.c_tag_hunter import CTagHunter
 from src.ecs.components.tags.c_tag_player import CTagPlayer
 
 def create_square(world:esper.World, size:pygame.Vector2,
@@ -44,6 +46,14 @@ def create_enemy_square(world:esper.World, pos:pygame.Vector2, enemy_info:dict):
     
     enemy_entity = create_sprite(world, pos, velocity, enemy_surface)
     world.add_component(enemy_entity, CTagEnemy())
+
+def create_enemy_hunter(world:esper.World, pos:pygame.Vector2, enemy_info:dict):
+    enemy_surface = pygame.image.load(enemy_info['image']).convert_alpha()
+    vel = pygame.Vector2(0,0)
+    enemy_entity = create_sprite(world, pos, vel, enemy_surface)
+    world.add_component(enemy_entity, CTagHunter())
+    world.add_component(enemy_entity, CAnimation(enemy_info['animations']))
+    world.add_component(enemy_entity, CHunterState())
 
 def create_player_square(world: esper.World, player_info: dict, player_lvl_info: dict) -> int:
     player_surface = pygame.image.load(player_info['image']).convert_alpha()
