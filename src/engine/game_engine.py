@@ -8,6 +8,7 @@ from src.ecs.components.tags.c_tag_bullet import CTagBullet
 from src.ecs.systems.s_animation import system_animation
 from src.ecs.systems.s_collision_bullet_enemy import system_collision_bullet_enemy
 from src.ecs.systems.s_collision_player_enemy import system_collision_player_enemy
+from src.ecs.systems.s_collision_player_hunter import system_collision_player_hunter
 from src.ecs.systems.s_enemy_spawner import system_enemy_spawner
 from src.ecs.systems.s_input_bullet import system_input_bullet
 from src.ecs.systems.s_input_player import system_input_player
@@ -50,6 +51,8 @@ class GameEngine:
             self.player_cfg = json.load(player_file)
         with open("assets/cfg/bullet.json") as bullet_file:
             self.bullet_cfg = json.load(bullet_file)
+        with open("assets/cfg/explosion.json") as explosion_file:
+            self.explosion_cfg = json.load(explosion_file)
 
     def run(self) -> None:
         self._create()
@@ -96,8 +99,9 @@ class GameEngine:
         system_screen_bounce_player(self.ecs_world, self.screen)
         system_screen_bounce_bullet(self.ecs_world, self.screen)
 
-        system_collision_player_enemy(self.ecs_world, self._player_entity, self.level_01_cfg)
+        system_collision_player_enemy(self.ecs_world, self._player_entity, self.level_01_cfg, self.explosion_cfg)
         system_collision_bullet_enemy(self.ecs_world)
+        system_collision_player_hunter(self.ecs_world, self._player_entity, self.level_01_cfg)
 
         system_animation(self.ecs_world, self.delta_time)
         self.ecs_world._clear_dead_entities()

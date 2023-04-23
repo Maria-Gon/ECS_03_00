@@ -7,4 +7,5 @@ class CHunterState:
 
 class HunterState(Enum):
     IDLE = 0
-    MOVE = 1
+    CHASE = 1
+    RETURN = 2

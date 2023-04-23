@@ -12,6 +12,7 @@ from src.ecs.components.c_transform import CTransform
 from src.ecs.components.c_velocity import CVelocity
 from src.ecs.components.tags.c_tag_bullet import CTagBullet
 from src.ecs.components.tags.c_tag_enemy import CTagEnemy
+from src.ecs.components.tags.c_tag_explosion import CTagExplosion
 from src.ecs.components.tags.c_tag_hunter import CTagHunter
 from src.ecs.components.tags.c_tag_player import CTagPlayer
 
@@ -111,3 +112,10 @@ def create_bullet(world: esper.World, bullet_info: dict, player_entity: int, pos
 def create_input_bullet (world: esper.World):
     input_click = world.create_entity()
     world.add_component(input_click, CInputCommand('PLAYER_CLICK', pygame.BUTTON_LEFT))
+
+def create_explosion(world:esper.World, pos:pygame.Vector2, explosion_info:dict):
+    esplosion_surface = pygame.image.load(explosion_info['image']).convert_alpha()
+    vel = pygame.Vector2(0,0)
+    explosion_entity = create_sprite(world, pos, vel, esplosion_surface)
+    world.add_component(explosion_entity, CTagExplosion())
+    world.add_component(explosion_entity, CAnimation(explosion_info['animations']))
