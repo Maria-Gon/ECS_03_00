@@ -14,17 +14,18 @@ def system_hunter_state(world: esper.World, hunter_info: dict):
     for _, (c_t, c_v, c_a, c_hst) in components:
         for _, (p_t, _) in player_components:
             if c_hst.state == HunterState.IDLE:
-                _do_idle_state(c_t, c_a, c_hst, p_t, hunter_info)
+                _do_idle_state(c_t, c_a, c_hst, p_t, c_v, hunter_info)
             elif c_hst.state == HunterState.CHASE:
                 _do_chase_state(c_t, c_a, c_hst, p_t, c_v, hunter_info)
             elif c_hst.state == HunterState.RETURN:
                 _do_return_state(c_t, c_a, c_hst, c_v, hunter_info)
 
-def _do_idle_state(c_t: CTransform, c_a: CAnimation, c_hst: CHunterState, p_t: CTransform, hunter_info: dict):
+def _do_idle_state(c_t: CTransform, c_a: CAnimation, c_hst: CHunterState, p_t: CTransform, c_v: CVelocity, hunter_info: dict):
     _set_animation(c_a, 1)
     init_p = c_hst.init_pos.copy()
     c_t.pos.x = init_p.x
     c_t.pos.y = init_p.y
+    c_v.vel = pygame.Vector2(0,0)
     distance = c_t.pos.distance_to(p_t.pos)
     if distance <= hunter_info['Hunter']['distance_start_chase']:
         c_hst.state = HunterState.CHASE
