@@ -22,8 +22,11 @@ def system_hunter_state(world: esper.World, hunter_info: dict):
 
 def _do_idle_state(c_t: CTransform, c_a: CAnimation, c_hst: CHunterState, p_t: CTransform, hunter_info: dict):
     _set_animation(c_a, 1)
+    init_p = c_hst.init_pos.copy()
+    c_t.pos.x = init_p.x
+    c_t.pos.y = init_p.y
     distance = c_t.pos.distance_to(p_t.pos)
-    if distance < hunter_info['Hunter']['distance_start_chase']:
+    if distance <= hunter_info['Hunter']['distance_start_chase']:
         c_hst.state = HunterState.CHASE
 
 def _do_chase_state(c_t: CTransform, c_a: CAnimation, c_hst: CHunterState, p_t: CTransform, c_v: CVelocity, hunter_info: dict):
@@ -34,18 +37,17 @@ def _do_chase_state(c_t: CTransform, c_a: CAnimation, c_hst: CHunterState, p_t: 
     pos_y = pl_p.y - c_t.pos.y
     c_v.vel = pygame.Vector2(pos_x, pos_y).normalize() * hunter_info['Hunter']['velocity_chase']
 
-    if distance > hunter_info['Hunter']['distance_start_return']:
+    if distance >= hunter_info['Hunter']['distance_start_return']:
         c_hst.state = HunterState.RETURN
 
 def _do_return_state(c_t: CTransform, c_a: CAnimation, c_hst: CHunterState, c_v: CVelocity, hunter_info: dict):
     _set_animation(c_a, 0)
     distance = c_t.pos.distance_to(c_hst.init_pos)
-    pl_p = c_hst.init_pos.copy()
-    pos_x = pl_p.x - c_t.pos.x
-    pos_y = pl_p.y - c_t.pos.y
+    init_p = c_hst.init_pos.copy()
+    pos_x = init_p.x - c_t.pos.x
+    pos_y = init_p.y - c_t.pos.y
     c_v.vel = pygame.Vector2(pos_x, pos_y).normalize() * hunter_info['Hunter']['velocity_return']
-
-    if distance == c_hst.init_pos:
+    if distance <= 5:
         c_hst.state = HunterState.IDLE
 
 def _set_animation(c_a: CAnimation, num_anim: int):
