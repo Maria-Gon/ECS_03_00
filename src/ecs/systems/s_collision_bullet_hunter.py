@@ -3,11 +3,11 @@ from src.create.prefab_creator import create_explosion
 from src.ecs.components.c_surface import CSurface
 from src.ecs.components.c_transform import CTransform
 from src.ecs.components.tags.c_tag_bullet import CTagBullet
-from src.ecs.components.tags.c_tag_enemy import CTagEnemy
+from src.ecs.components.tags.c_tag_hunter import CTagHunter
 
 
-def system_collision_bullet_enemy(world: esper.World, explosion: dict):
-    enemy_components = world.get_components(CSurface, CTransform, CTagEnemy)
+def system_collision_bullet_hunter(world: esper.World, explosion: dict):
+    enemy_components = world.get_components(CSurface, CTransform, CTagHunter)
     bullet_components = world.get_components(CSurface, CTransform, CTagBullet)
     
     for bullet_entity, (b_s, b_t, _) in bullet_components:
